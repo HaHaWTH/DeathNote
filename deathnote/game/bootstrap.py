@@ -54,7 +54,7 @@ from deathnote.game.social.chat_settings import NativeChatSettings
 from deathnote.game.social.chat_players import NativeChatPlayers
 from deathnote.game.social.chat_messages import NativeChatMessages
 
-BOOTSTRAP_HOST = 'l14-prod-hk-all-gs-sirius.gamerfusiontech.com'
+BOOTSTRAP_HOST = '[CONFIGURE THIS ON YOUR OWN]' # TODO
 SERVER_LIST_METHOD = '/app.playerlogin.PlayerLoginService/GetServerList'
 VERSION_METHOD = '/app.masterdata.MasterdataService/Version'
 FEATURE_SWITCH_METHOD = '/app.feature_switch.FeatureSwitchService/Get'

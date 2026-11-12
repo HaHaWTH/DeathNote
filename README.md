@@ -54,4 +54,8 @@ Replace the example address with the server computer's LAN address. Place your P
 
 DeathNote has no affiliation with the game publishers or developers. Game names, trademarks, client files and assets belong to their respective rights holders. The source tree contains the local server implementation and protocol definitions. Operators should supply the matching client and obtain game resources separately. Player accounts, credentials and service keys are specific to each deployment.
 
-DeathNote is only for research purposes, **DO NOT USE IT FOR PIRACY**.
+DeathNote is intended for research. Use lawfully obtained client software and game resources.
+
+## License
+
+DeathNote is licensed under the [GNU Affero General Public License version 3](LICENSE) (`AGPL-3.0-only`).
