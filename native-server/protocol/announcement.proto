@@ -1,0 +1,26 @@
+syntax = "proto3";
+package app.announcement;
+option csharp_namespace = "App.Protobuf.Announcement";
+import "entity/home.proto";
+import "entity/announcement_external.proto";
+
+enum Tab {
+  ALL = 0;
+  OPENING_EVENTS = 1;
+  BUG = 2;
+}
+
+message GetListRequest {
+  Tab selected_tab = 1;
+}
+message GetListResponse {
+  repeated entity.Announcement announcements = 1;
+  repeated entity.AnnouncementExternalContent external_contents = 2;
+}
+message GetRequest { int64 id = 1; }
+message GetResponse { entity.Announcement announcement = 1; }
+
+service AnnouncementService {
+  rpc GetList(GetListRequest) returns (GetListResponse);
+  rpc Get(GetRequest) returns (GetResponse);
+}

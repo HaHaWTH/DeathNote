@@ -1,0 +1,11 @@
+syntax = "proto3";
+package app.personal_notification;
+import "google/protobuf/empty.proto";
+import "entity/home.proto";
+
+service PersonalNotificationService {
+  rpc Fetch(google.protobuf.Empty) returns (FetchResponse);
+}
+message FetchResponse {
+  entity.PersonalNotification unread_notifications = 1;
+}

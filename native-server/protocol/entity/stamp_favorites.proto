@@ -1,0 +1,12 @@
+syntax = "proto3";
+package entity;
+
+message UpdateStampFavorite {
+  int32 favorite_id = 1;
+  repeated int64 stamp_ids = 2;
+}
+
+message StampFavoriteName {
+  int32 favorite_id = 1;
+  string name = 2;
+}

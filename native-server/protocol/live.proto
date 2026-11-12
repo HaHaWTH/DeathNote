@@ -1,0 +1,30 @@
+syntax = "proto3";
+package app.live;
+
+import "live_start.proto";
+import "live_finish.proto";
+import "live_battle.proto";
+import "live_skip.proto";
+import "live_settings.proto";
+import "challenge_live.proto";
+import "common_social.proto";
+import "google/protobuf/empty.proto";
+
+service LiveService {
+  rpc SaveSetting(SaveSettingRequest) returns (SaveSettingResponse);
+  rpc StartChallengeLive(StartChallengeLiveRequest) returns (StartChallengeLiveResponse);
+  rpc FinishChallengeLive(FinishChallengeLiveRequest) returns (FinishChallengeLiveResponse);
+  rpc SkipChallengeLive(SkipChallengeLiveRequest) returns (SkipChallengeLiveResponse);
+  rpc SendBattleLiveInvitation(SendBattleLiveInvitationRequest) returns (google.protobuf.Empty);
+  rpc RemoveBattleLiveInvitation(RemoveBattleLiveInvitationRequest) returns (google.protobuf.Empty);
+  rpc CheckMaintenanceFree(CheckMaintenanceFreeRequest) returns (CheckMaintenanceFreeResponse);
+  rpc StartFree(StartFreeRequest) returns (StartFreeResponse);
+  rpc FinishFree(FinishFreeRequest) returns (FinishFreeResponse);
+  rpc SkipFree(SkipFreeRequest) returns (SkipFreeResponse);
+  rpc GainStampReward(GainStampRewardRequest) returns (GainStampRewardResponse);
+  rpc StartBattleLive(StartBattleLiveRequest) returns (StartBattleLiveResponse);
+  rpc FinishBattleLive(FinishBattleLiveRequest) returns (FinishBattleLiveResponse);
+  rpc GetBattleLiveResult(GetBattleLiveResultRequest) returns (GetBattleLiveResultResponse);
+  rpc GetBattleLiveSearchId(GetBattleLiveSearchIdRequest) returns (GetBattleLiveSearchIdResponse);
+  rpc FetchBattleLiveInvitation(google.protobuf.Empty) returns (FetchBattleLiveInvitationResponse);
+}

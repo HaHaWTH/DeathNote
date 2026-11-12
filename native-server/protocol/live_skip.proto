@@ -1,0 +1,19 @@
+syntax = "proto3";
+package app.live;
+import "entity/player.proto";
+import "entity/live_finish.proto";
+import "entity/resource.proto";
+
+message SkipFreeRequest {
+  int64 music_id = 1;
+  int32 difficulty = 2;
+  int32 boost = 3;
+  int32 deck_id = 4;
+  int32 current_deck_total_power = 5;
+}
+message SkipFreeResponse {
+  repeated int64 reward_id = 1;
+  repeated entity.LiveEventReward event_reward = 2;
+  entity.Notification notification = 3;
+  repeated entity.RewardResource campaign_drop_rewards = 4;
+}

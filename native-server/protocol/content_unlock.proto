@@ -1,0 +1,12 @@
+syntax = "proto3";
+package app.content_unlock;
+
+message ShownRequest {
+  repeated int64 master_ids = 1;
+}
+
+message ShownResponse {}
+
+service ContentUnlockService {
+  rpc Shown(ShownRequest) returns (ShownResponse);
+}

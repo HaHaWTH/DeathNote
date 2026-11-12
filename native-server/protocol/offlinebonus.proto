@@ -1,0 +1,40 @@
+syntax = "proto3";
+package app.offlinebonus;
+option csharp_namespace = "App.Protobuf.OfflineBonus";
+import "entity/offline_bonus.proto";
+import "entity/player.proto";
+
+message StatusRequest {}
+message StatusResponse {
+  entity.OfflineBonus offline_bonus = 1;
+  repeated entity.OfflineBonusUnitLite offline_bonus_units = 2;
+}
+message DetailRequest { int64 offline_bonus_unit_id = 1; }
+message DetailResponse { entity.OfflineBonusUnit offline_bonus_unit = 1; }
+message ReceiveRequest { repeated int64 offline_bonus_unit_ids = 1; }
+message ReceiveResponse {
+  repeated entity.OfflineBonusUnitResult unit_results = 1;
+  entity.Notification notification = 2;
+}
+message ReceiveStockRequest { int64 offline_bonus_unit_id = 1; }
+message ReceiveStockResponse {
+  entity.OfflineBonusUnitResult unit_result = 1;
+  entity.Notification notification = 2;
+}
+message SkipRequest {
+  int64 offline_bonus_unit_id = 1;
+  int32 type = 2;
+  int64 item_master_id = 3;
+}
+message SkipResponse {
+  entity.OfflineBonus offline_bonus = 1;
+  entity.OfflineBonusUnitResult unit_result = 2;
+  entity.Notification notification = 3;
+}
+service OfflineBonusService {
+  rpc Status(StatusRequest) returns (StatusResponse);
+  rpc Detail(DetailRequest) returns (DetailResponse);
+  rpc Receive(ReceiveRequest) returns (ReceiveResponse);
+  rpc ReceiveStock(ReceiveStockRequest) returns (ReceiveStockResponse);
+  rpc Skip(SkipRequest) returns (SkipResponse);
+}

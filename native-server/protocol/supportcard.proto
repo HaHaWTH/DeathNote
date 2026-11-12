@@ -1,0 +1,28 @@
+syntax = "proto3";
+package app.supportcard;
+option csharp_namespace = "App.Protobuf.SupportCard";
+
+import "entity/player.proto";
+
+message LevelUpRequest {
+  int64 support_card_master_id = 1;
+  int32 to_level = 2;
+  int32 highest_total_power = 3;
+}
+
+message LevelUpResponse {
+  entity.Notification notification = 1;
+}
+
+message RankUpRequest {
+  int64 support_card_master_id = 1;
+  int32 to_card_rank = 2;
+  int32 highest_total_power = 3;
+}
+
+message RankUpResponse { entity.Notification notification = 1; }
+
+service SupportCardService {
+  rpc LevelUp(LevelUpRequest) returns (LevelUpResponse);
+  rpc RankUp(RankUpRequest) returns (RankUpResponse);
+}

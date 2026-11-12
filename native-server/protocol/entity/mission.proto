@@ -1,0 +1,9 @@
+syntax = "proto3";
+package entity;
+
+message MissionCounter {
+  int32 mission_type = 1;
+  int64 param1 = 2;
+  int64 param2 = 3;
+  int64 progress = 4;
+}

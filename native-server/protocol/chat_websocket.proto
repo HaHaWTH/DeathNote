@@ -1,0 +1,18 @@
+syntax = "proto3";
+package app.chat;
+
+message CSCommonMessage { string Msgkey = 2; bytes Msgbody = 3; }
+message MessageLoginIMReq {
+  int64 AccountID = 2;
+  string UserToken = 3;
+  string ClientIP = 4;
+}
+message MessageLoginIMResp {
+  int64 ID = 1;
+  int32 Ret = 2;
+  int64 AccountID = 3;
+  int64 WorldChatRoomID = 4;
+}
+message GRPCPing { int32 timestamp = 1; }
+message BaseNoti { int32 RetCode = 1; string RetMsg = 2; }
+message MessageRetNoti { BaseNoti Base = 3; }

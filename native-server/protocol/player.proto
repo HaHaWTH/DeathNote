@@ -1,0 +1,44 @@
+syntax = "proto3";
+package app.player;
+import "entity/player.proto";
+import "player_favorites.proto";
+import "character_costume.proto";
+import "player_options.proto";
+import "player_session.proto";
+
+message GetPlayerDataRequest {
+  bool skip_login_process = 1;
+}
+
+message EditProfileRequest {
+  string name = 1;
+}
+
+message EditProfileResponse {}
+
+message GetPlayerDataResponse {
+  entity.PlayerData player_data = 1;
+  entity.Notification notification = 2;
+  entity.Limitation limitation = 3;
+  entity.Friends friends = 4;
+  entity.Invitation invitation = 5;
+  int64 accountid = 6;
+  int64 world_room_id = 7;
+  string iap_google_account_binding = 8;
+  string iap_apple_account_binding = 9;
+  int32 chat_report_used_today = 100;
+  repeated int64 room_ids = 101;
+}
+
+service PlayerService {
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc GetPlayerData(GetPlayerDataRequest) returns (GetPlayerDataResponse);
+  rpc EditProfile(EditProfileRequest) returns (EditProfileResponse);
+  rpc GetPlayerFavoriteStatus(GetPlayerFavoriteStatusRequest) returns (GetPlayerFavoriteStatusResponse);
+  rpc UpdatePlayerFavorite(UpdatePlayerFavoriteRequest) returns (UpdatePlayerFavoriteResponse);
+  rpc SetCurrentCostumes(SetCurrentCostumesRequest) returns (SetCurrentCostumesResponse);
+  rpc ChangeFavoriteMember(ChangeFavoriteMemberRequest) returns (ChangeFavoriteMemberResponse);
+  rpc GetCharacterOrders(GetCharacterOrdersRequest) returns (GetCharacterOrdersResponse);
+  rpc SaveCharacterOrders(SaveCharacterOrdersRequest) returns (SaveCharacterOrdersResponse);
+  rpc SetNotificationSetting(SetNotificationSettingRequest) returns (SetNotificationSettingResponse);
+}

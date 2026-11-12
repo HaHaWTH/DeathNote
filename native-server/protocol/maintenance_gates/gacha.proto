@@ -1,0 +1,8 @@
+syntax = "proto3";
+package app.gacha;
+option csharp_namespace = "App.Protobuf.Gacha";
+message CheckMaintenanceGachaRequest {}
+message CheckMaintenanceGachaResponse {}
+service GachaService {
+  rpc CheckMaintenanceGacha(CheckMaintenanceGachaRequest) returns (CheckMaintenanceGachaResponse);
+}

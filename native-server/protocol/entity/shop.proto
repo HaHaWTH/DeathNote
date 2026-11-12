@@ -1,0 +1,22 @@
+syntax = "proto3";
+package entity;
+
+message ShopTriggerProgress {
+  int64 trigger_id = 1;
+  int32 progress_count = 2;
+}
+
+message ShopProduct {
+  int64 shop_id = 1;
+  int32 total_purchase_count = 2;
+  int32 daily_purchase_count = 3;
+  int32 weekly_purchase_count = 4;
+  int32 monthly_purchase_count = 5;
+  repeated ShopTriggerProgress progresses = 6;
+  int64 expire_at = 7;
+}
+
+message ShopPurchaseHistory {
+  int64 shop_id = 1;
+  int64 purchase_at = 2;
+}

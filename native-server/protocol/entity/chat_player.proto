@@ -1,0 +1,13 @@
+syntax = "proto3";
+package entity;
+
+message PlayerBriefInfo {
+  int64 account_id = 1;
+  string player_id = 2;
+  string nickname = 3;
+  int32 level = 4;
+  int64 chat_frame_id = 5;
+  int64 chat_bubble_id = 6;
+  int64 chat_theme_id = 7;
+  int64 avatar_id = 8;
+}

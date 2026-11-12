@@ -1,0 +1,27 @@
+syntax = "proto3";
+package app.external_payments;
+option csharp_namespace = "App.Protobuf.ExternalPayments";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+enum PaymentDenyReason {
+  None = 0;
+  LimitReached = 1;
+  ByOtherPayment = 2;
+  TimeLimit = 3;
+}
+
+message ReserveProvisionalPurchaseRequest {
+  int64 shop_item_id = 1;
+  google.protobuf.Timestamp expires_at = 2;
+}
+message ReserveProvisionalPurchaseResponse {
+  PaymentDenyReason status = 1;
+}
+message ReleaseProvisionalPurchaseRequest {}
+
+service ExternalPaymentsService {
+  rpc Nop(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc ReserveProvisionalPurchase(ReserveProvisionalPurchaseRequest) returns (ReserveProvisionalPurchaseResponse);
+  rpc ReleaseProvisionalPurchase(ReleaseProvisionalPurchaseRequest) returns (google.protobuf.Empty);
+}

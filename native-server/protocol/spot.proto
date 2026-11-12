@@ -1,0 +1,12 @@
+syntax = "proto3";
+package app.spot;
+
+message UpdateSpotFavoritesRequest {
+  repeated int64 spot_ids = 1;
+}
+
+message UpdateSpotFavoritesResponse {}
+
+service SpotService {
+  rpc UpdateSpotFavorites(UpdateSpotFavoritesRequest) returns (UpdateSpotFavoritesResponse);
+}

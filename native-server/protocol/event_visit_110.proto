@@ -1,0 +1,21 @@
+syntax = "proto3";
+package app.event;
+import "entity/player.proto";
+import "social_queries/ranking_deck.proto";
+
+message GetChallengeMusicTotalRankingRequest { int64 event_id = 1; }
+message ChallengeMusicTotalRankingPlayer {
+  entity.PlayerSimpleProfile player_data = 1;
+  int32 score = 2;
+  entity.DeckDetail high_score_deck = 3;
+}
+message GetChallengeMusicTotalRankingResponse {
+  repeated ChallengeMusicTotalRankingPlayer players = 1;
+  int32 my_rank = 2;
+  int32 my_score = 3;
+}
+message VisitTopRequest { int64 event_id = 1; }
+message VisitTopResponse {
+  entity.Notification notification = 1;
+  int32 challenge_music_total_my_rank = 2;
+}

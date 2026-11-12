@@ -1,0 +1,44 @@
+syntax = "proto3";
+package app.mission;
+option csharp_namespace = "App.Protobuf.Present";
+
+import "entity/player.proto";
+
+service MissionService {
+  rpc Fetch(FetchMissionRequest) returns (FetchMissionResponse);
+  rpc Receive(ReceiveRequest) returns (ReceiveResponse);
+  rpc ReceiveCharacter(ReceiveCharacterRequest) returns (ReceiveCharacterResponse);
+  rpc FetchEvent(FetchEventMissionRequest) returns (FetchEventMissionResponse);
+  rpc ReceiveEvent(ReceiveEventMissionRequest) returns (ReceiveEventMissionResponse);
+  rpc ReceiveLimited(ReceiveLimitedRequest) returns (ReceiveLimitedResponse);
+}
+
+message FetchMissionRequest {}
+message FetchMissionResponse {
+  repeated entity.MissionCounter mission_counters = 1;
+  repeated entity.MissionProgress normal_missions = 2;
+  repeated entity.MissionProgress limited_missions = 3;
+  repeated entity.CharacterMissionReceived character_missions = 4;
+}
+
+message ReceiveRequest { repeated int64 mission_ids = 1; }
+message ReceiveResponse { entity.Notification notification = 1; }
+message ReceiveLimitedRequest { repeated int64 mission_ids = 1; }
+message ReceiveLimitedResponse { entity.Notification notification = 1; }
+message FetchEventMissionRequest { int64 event_id = 1; }
+message FetchEventMissionResponse {
+  repeated entity.MissionCounter mission_counters = 1;
+  repeated entity.MissionProgress mission_progresses = 2;
+  entity.Notification notification = 3;
+}
+message ReceiveEventMissionRequest { repeated int64 mission_ids = 1; }
+message ReceiveEventMissionResponse { entity.Notification notification = 1; }
+
+message ReceiveCharacterRequest {
+  int64 character_id = 1;
+  repeated int64 mission_ids = 2;
+}
+
+message ReceiveCharacterResponse {
+  entity.Notification notification = 1;
+}

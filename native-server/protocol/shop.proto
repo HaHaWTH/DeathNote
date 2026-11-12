@@ -1,0 +1,35 @@
+syntax = "proto3";
+package app.shop;
+option csharp_namespace = "App.Protobuf.Shop";
+import "entity/shop.proto";
+import "entity/player.proto";
+
+message FetchRequest {}
+message FetchResponse {
+  repeated entity.ShopProduct products = 1;
+  int32 year = 2;
+  int32 month = 3;
+  int32 monthly_total_payment = 4;
+}
+message PurchaseRequest { int64 shop_id = 1; int32 purchase_count = 2; }
+message PurchaseCMRequest { int64 shop_id = 1; }
+message PurchaseCashRequest { int64 shop_id = 1; string signature = 2; string receipt = 3; }
+message PurchaseResponse { entity.Notification notification = 1; }
+message PurchaseCashResponse { PaymentResult result = 1; entity.Notification notification = 2; }
+message HistoryRequest {}
+message HistoryResponse { repeated entity.ShopPurchaseHistory histories = 1; }
+enum PaymentResult {
+  PAYMENT_UNSPECIFIED = 0;
+  PAYMENT_SUCCESS = 1;
+  PAYMENT_PENDING = 2;
+  PAYMENT_CANCELED = 3;
+  PAYMENT_REJECTED = 4;
+}
+
+service ShopService {
+  rpc Fetch(FetchRequest) returns (FetchResponse);
+  rpc Purchase(PurchaseRequest) returns (PurchaseResponse);
+  rpc PurchaseCM(PurchaseCMRequest) returns (PurchaseResponse);
+  rpc PurchaseCash(PurchaseCashRequest) returns (PurchaseCashResponse);
+  rpc History(HistoryRequest) returns (HistoryResponse);
+}

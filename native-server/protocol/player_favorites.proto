@@ -1,0 +1,8 @@
+syntax = "proto3";
+package app.player;
+option csharp_namespace = "App.Protobuf.Player";
+
+message GetPlayerFavoriteStatusRequest { string player_id = 1; }
+message GetPlayerFavoriteStatusResponse { int64 total_favorite = 1; bool is_sent_favorite = 2; }
+message UpdatePlayerFavoriteRequest { string player_id = 1; bool is_cancel = 2; }
+message UpdatePlayerFavoriteResponse {}

@@ -1,0 +1,33 @@
+syntax = "proto3";
+package app.seasonpass;
+option csharp_namespace = "App.Protobuf.SeasonPass";
+import "entity/mission.proto";
+import "entity/season_pass.proto";
+import "entity/player.proto";
+
+message FetchSeasonPassRequest {}
+message FetchSeasonPassResponse {
+  repeated entity.MissionCounter mission_counters = 1;
+  repeated entity.SeasonPassDetail season_passes = 2;
+}
+
+message ReceiveMissionRequest {
+  int64 season_pass_id = 1;
+  repeated int64 season_pass_mission_ids = 2;
+}
+message ReceiveMissionResponse {}
+message ReceiveRewardRequest { int64 season_pass_id = 1; }
+message ReceiveRewardResponse { entity.Notification notification = 1; }
+message PurchaseRequest {
+  int64 season_pass_id = 1;
+  int32 before_point = 2;
+  int32 after_point = 3;
+}
+message PurchaseResponse { entity.Notification notification = 1; }
+
+service SeasonPassService {
+  rpc Fetch(FetchSeasonPassRequest) returns (FetchSeasonPassResponse);
+  rpc ReceiveMission(ReceiveMissionRequest) returns (ReceiveMissionResponse);
+  rpc ReceiveReward(ReceiveRewardRequest) returns (ReceiveRewardResponse);
+  rpc Purchase(PurchaseRequest) returns (PurchaseResponse);
+}

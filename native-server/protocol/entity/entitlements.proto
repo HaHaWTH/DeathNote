@@ -1,0 +1,29 @@
+syntax = "proto3";
+package entity;
+
+message MonthlyPassState {
+  int64 monthly_pass_id = 1;
+  int64 purchased_at = 2;
+  int64 expire_at = 3;
+  int32 last_daily_reward_day_number = 4;
+  int32 group_purchase_count = 5;
+  int64 free_gacha_used_at = 6;
+  bool is_extension_purchased = 7;
+}
+
+message MonthlyPassDailyReward {
+  int64 monthly_pass_id = 1;
+  int32 day_number = 2;
+  int64 target_at = 3;
+}
+
+message Stamp {
+  int64 id = 1;
+  repeated FavoriteIndex favorites = 2;
+  optional int64 got_at = 3;
+}
+
+message FavoriteIndex {
+  int32 favorite_id = 1;
+  int32 slot_index = 2;
+}

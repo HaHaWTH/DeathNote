@@ -1,0 +1,31 @@
+syntax = "proto3";
+package app.playerext;
+
+import "entity/player.proto";
+import "entity/chat_player.proto";
+
+message SyncDataRequest {}
+
+message SyncDataResponse {
+  int64 accountid = 1;
+  int64 world_room_id = 2;
+  entity.Gem gem = 3;
+  entity.LiveBoost live_boost = 4;
+}
+
+message ReportLogRequest {
+  string tag = 1;
+  string content = 2;
+}
+message ReportLogResponse {
+  bool accepted = 1;
+}
+
+message GetPlayerListRequest { repeated int64 account_ids = 1; }
+message GetPlayerListResponse { repeated entity.PlayerBriefInfo players = 1; }
+
+service PlayerExtService {
+  rpc SyncData(SyncDataRequest) returns (SyncDataResponse);
+  rpc ReportLog(ReportLogRequest) returns (ReportLogResponse);
+  rpc GetPlayerList(GetPlayerListRequest) returns (GetPlayerListResponse);
+}

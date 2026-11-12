@@ -1,0 +1,31 @@
+syntax = "proto3";
+package app.live;
+
+import "entity/player.proto";
+import "entity/resource.proto";
+import "entity/live_finish.proto";
+
+message FinishFreeRequest {
+  int32 clear_status = 1;
+  int32 score = 2;
+  int32 combo = 3;
+  entity.LiveFinish live_finish = 4;
+}
+
+message FinishFreeResponse {
+  repeated int64 reward_id = 1;
+  repeated entity.LiveEventReward event_reward = 2;
+  repeated int64 total_highscore_rating_reward_ids = 3;
+  repeated entity.BandHighScoreRatingReward band_highscore_rating_rewards = 4;
+  repeated entity.RewardResource music_rewards = 5;
+  entity.Notification notification = 6;
+  repeated entity.RewardResource campaign_drop_rewards = 7;
+}
+
+message GainStampRewardRequest {
+  int64 reward_id = 1;
+}
+
+message GainStampRewardResponse {
+  entity.Notification notification = 1;
+}

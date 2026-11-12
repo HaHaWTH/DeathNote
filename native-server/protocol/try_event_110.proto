@@ -1,0 +1,6 @@
+syntax = "proto3";
+package app.event;
+import "entity/try_live_110.proto";
+
+message GetTryEventRequest { int64 event_id = 1; }
+message GetTryEventResponse { entity.TryEvent try_event = 1; }

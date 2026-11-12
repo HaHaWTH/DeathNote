@@ -1,0 +1,51 @@
+syntax = "proto3";
+package entity;
+option csharp_namespace = "App.Protobuf.Entity";
+
+message GachaCount {
+  int64 product_id = 1;
+  int32 count = 2;
+  int64 last_execute = 3;
+  int64 gacha_id = 4;
+}
+
+message GachaPoint {
+  int64 gacha_id = 1;
+  int32 point = 2;
+}
+
+message LotProbability {
+  int64 lot_id = 1;
+  string probability_percent = 2;
+}
+
+message PrizeProbability {
+  int64 prize_id = 1;
+  string probability_percent = 2;
+}
+
+message Probability {
+  repeated LotProbability lot = 1;
+  repeated PrizeProbability prize = 2;
+}
+
+message GachaHistory {
+  int64 prize_id = 1;
+  int64 gain_at = 2;
+  bool converted = 3;
+}
+
+message GachaExecutionHistory {
+  int64 gacha_id = 1;
+  int64 product_id = 2;
+  int32 free_gem = 3;
+  int32 paid_gem = 4;
+  int32 ticket = 5;
+  int64 executed_at = 6;
+  repeated GachaPrizeHistory prize = 7;
+}
+
+message GachaPrizeHistory {
+  int64 prize_id = 1;
+  bool converted = 2;
+}

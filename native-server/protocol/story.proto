@@ -1,0 +1,12 @@
+syntax = "proto3";
+package app.story;
+import "entity/player.proto";
+
+service StoryService {
+  rpc ReadStoryEpisode(ReadStoryEpisodeRequest) returns (ReadStoryEpisodeResponse);
+  rpc ReadFriendshipEpisode(ReadFriendshipEpisodeRequest) returns (ReadFriendshipEpisodeResponse);
+}
+message ReadStoryEpisodeRequest { int64 episode_id = 1; bool is_skipped = 2; }
+message ReadStoryEpisodeResponse { bool is_valid_band_rank = 1; entity.Notification notification = 2; }
+message ReadFriendshipEpisodeRequest { int64 episode_id = 1; bool is_skipped = 2; }
+message ReadFriendshipEpisodeResponse { entity.Notification notification = 1; }

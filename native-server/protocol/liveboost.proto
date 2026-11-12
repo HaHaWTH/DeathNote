@@ -1,0 +1,20 @@
+syntax = "proto3";
+package app.liveboost;
+option csharp_namespace = "App.Protobuf.LiveBoost";
+
+import "entity/player.proto";
+
+message LiveBoostRecoveryRequest {
+  int32 type = 1;
+  int32 star_amount = 2;
+  map<int64, int32> items = 3;
+}
+
+message LiveBoostRecoveryResponse {
+  entity.LiveBoost live_boost = 1;
+  entity.Notification notification = 2;
+}
+
+service LiveBoostService {
+  rpc Recovery(LiveBoostRecoveryRequest) returns (LiveBoostRecoveryResponse);
+}

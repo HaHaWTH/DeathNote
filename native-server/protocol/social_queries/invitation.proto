@@ -1,0 +1,17 @@
+syntax = "proto3";
+package app.invitation;
+option csharp_namespace = "App.Protobuf.Invitation";
+
+service InvitationService {
+  rpc GenerateInvitationCode(GenerateInvitationCodeRequest) returns (GenerateInvitationCodeResponse);
+  rpc InputInvitationCode(InputInvitationCodeRequest) returns (InputInvitationCodeResponse);
+  rpc UpdateInvitationView(UpdateInvitationViewRequest) returns (UpdateInvitationViewResponse);
+}
+message GenerateInvitationCodeRequest {}
+message GenerateInvitationCodeResponse {
+  string invitation_code = 1;
+}
+message InputInvitationCodeRequest { string invitation_code = 1; }
+message InputInvitationCodeResponse { bool is_establishment = 1; }
+message UpdateInvitationViewRequest { repeated string target_player_ids = 1; }
+message UpdateInvitationViewResponse {}

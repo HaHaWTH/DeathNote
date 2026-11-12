@@ -1,0 +1,58 @@
+syntax = "proto3";
+package entity;
+
+import "entity/player.proto";
+import "entity/resource.proto";
+import "entity/live_finish.proto";
+
+enum GekisouRankigType {
+  GEKISOU_RANKING_TYPE_UNSPECIFIED = 0;
+  GEKISOU_RANKING_TYPE_SCORE = 1;
+  GEKISOU_RANKING_TYPE_01 = 2;
+  GEKISOU_RANKING_TYPE_02 = 3;
+  GEKISOU_RANKING_TYPE_03 = 4;
+}
+
+enum GekisouRankingRewardState {
+  GEKISOU_RANKING_REWARD_UNSPECIFIED = 0;
+  GEKISOU_RANKING_REWARD_COMPLETE_SUCCESSFULLY = 1;
+  GEKISOU_RANKING_REWARD_COMPLETE_TIMEOUT = 2;
+  GEKISOU_RANKING_REWARD_COMPLETED = 3;
+}
+
+message JudgementSummary {
+  int32 clear_status = 1;
+  int32 solo_score = 2;
+  int32 combo = 3;
+  repeated JudgementCount judgement_counts = 4;
+}
+
+message BattleLivePlayerResult {
+  string player_id = 1;
+  int32 battle_live_score = 2;
+  repeated int32 gekisou_score = 3;
+  bytes battle_live_log = 4;
+  JudgementSummary judgement = 5;
+}
+
+message GekisouRankingPlayer {
+  string player_id = 1;
+  int32 rank = 2;
+}
+
+message GekisouRanking {
+  GekisouRankigType ranking_type = 1;
+  repeated GekisouRankingPlayer ranking = 2;
+}
+
+message BattleLiveRewardResource {
+  RewardResource resource = 1;
+  GekisouRankigType ranking_type = 2;
+}
+
+message BattleLiveInvitation {
+  PlayerSimpleProfile sender = 1;
+  int64 lobby_id = 2;
+  int64 send_at = 3;
+  PlayerSimpleProfile host = 4;
+}

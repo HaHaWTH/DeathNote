@@ -1,0 +1,21 @@
+syntax = "proto3";
+package entity;
+import "entity/player.proto";
+
+message DeckDetail {
+  int32 id = 1;
+  string name = 2;
+  repeated DeckCardDetail cards = 3;
+  int32 total_power = 4;
+}
+message DeckCardDetail {
+  int32 slot_index = 1;
+  int32 performance_order_index = 2;
+  DeckMemberCardDetail member_card = 3;
+  DeckSupportCardDetail support_card = 4;
+}
+message DeckSupportCardDetail {
+  int64 card_id = 1;
+  int32 exp = 2;
+  int32 rank = 3;
+}

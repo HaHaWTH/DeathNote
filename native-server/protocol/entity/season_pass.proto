@@ -1,0 +1,25 @@
+syntax = "proto3";
+package entity;
+
+message SeasonPass {
+  int64 season_pass_id = 1;
+  int32 point = 2;
+  bool is_premium = 3;
+  int32 last_received_level = 4;
+  int32 premium_last_received_level = 5;
+}
+
+message SeasonPassMission {
+  int64 season_pass_id = 1;
+  int64 season_pass_mission_id = 2;
+  int64 start_count = 3;
+  bool is_completed = 4;
+  bool is_received = 5;
+  int64 start_at = 6;
+}
+
+message SeasonPassDetail {
+  SeasonPass season_pass = 1;
+  repeated SeasonPassMission missions = 2;
+  int32 auto_granted_point = 3;
+}

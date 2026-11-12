@@ -1,0 +1,56 @@
+syntax = "proto3";
+package entity;
+
+import "entity/player.proto";
+import "entity/entitlements.proto";
+import "entity/login_bonus.proto";
+
+enum AnnouncementCategory {
+  ANNOUNCEMENT_CATEGORY_UNSPECIFIED = 0;
+  ANNOUNCEMENT_CATEGORY_OTHER = 1;
+  ANNOUNCEMENT_CATEGORY_EVENT = 2;
+  ANNOUNCEMENT_CATEGORY_GACHA = 3;
+  ANNOUNCEMENT_CATEGORY_CAMPAIGN = 4;
+  ANNOUNCEMENT_CATEGORY_UPDATE = 5;
+  ANNOUNCEMENT_CATEGORY_MAINTENANCE = 6;
+  ANNOUNCEMENT_CATEGORY_BUG = 7;
+}
+
+enum AnnouncementPlatform {
+  ANNOUNCEMENT_PLATFORM_ALL = 0;
+  ANNOUNCEMENT_PLATFORM_IOS = 1;
+  ANNOUNCEMENT_PLATFORM_ANDROID = 2;
+}
+
+message Announcement {
+  int64 id = 1;
+  AnnouncementCategory category = 2;
+  string title = 3;
+  string banner_path = 4;
+  string banner_url = 5;
+  string body = 6;
+  int64 start_at = 7;
+  int64 end_at = 8;
+  int32 sort_order = 9;
+  string pickup_banner_path = 10;
+  string pickup_banner_url = 11;
+  int64 pickup_start_at = 12;
+  int64 pickup_end_at = 13;
+  int64 last_updated_at = 14;
+  int64 stylesheet_id = 15;
+  AnnouncementPlatform platform = 16;
+}
+
+message InvitationProfile {
+  PlayerSimpleProfile player_profile = 1;
+  int64 establishment_at = 2;
+}
+
+message PersonalNotification {
+  repeated ExshopPayment ex_shop_payments = 1;
+}
+
+message ExshopPayment {
+  int64 claim_id = 1;
+  int64 shop_id = 2;
+}

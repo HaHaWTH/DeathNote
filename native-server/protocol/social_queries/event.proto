@@ -1,0 +1,49 @@
+syntax = "proto3";
+package app.event;
+import "entity/player.proto";
+import "social_queries/ranking_deck.proto";
+import "event_visit_110.proto";
+import "try_event_110.proto";
+
+service EventService {
+  rpc GetChallengeMusicRanking(GetChallengeMusicRankingRequest) returns (GetChallengeMusicRankingResponse);
+  rpc ExecuteBoxGacha(ExecuteBoxGachaRequest) returns (ExecuteBoxGachaResponse);
+  rpc ResetBoxGacha(ResetBoxGachaRequest) returns (ResetBoxGachaResponse);
+  rpc GetDeck(GetDeckRequest) returns (GetDeckResponse);
+  rpc GetRank(GetRankRequest) returns (GetRankResponse);
+  rpc GetRankingList(GetRankingListRequest) returns (GetRankingListResponse);
+  rpc GetChallengeMusicTotalRanking(GetChallengeMusicTotalRankingRequest) returns (GetChallengeMusicTotalRankingResponse);
+  rpc VisitTop(VisitTopRequest) returns (VisitTopResponse);
+  rpc GetTryEvent(GetTryEventRequest) returns (GetTryEventResponse);
+}
+message ExecuteBoxGachaRequest { int64 event_id = 1; int32 count = 2; }
+message ExecuteBoxGachaResponse {
+  repeated int64 reward_id = 1;
+  entity.Notification notification = 2;
+}
+message ResetBoxGachaRequest { int64 event_id = 1; }
+message ResetBoxGachaResponse {}
+message GetRankRequest { int64 event_id = 1; }
+message GetRankResponse { int32 rank = 1; }
+message GetDeckRequest { string player_id = 1; int64 event_id = 2; }
+message GetDeckResponse { entity.DeckDetail deck = 1; }
+message GetRankingListRequest { int64 event_id = 1; repeated int32 ranks = 2; }
+message EventRankingEntry {
+  entity.PlayerSimpleProfile profile = 1;
+  int32 rank = 2;
+  int32 point = 3;
+}
+message GetRankingListResponse { repeated EventRankingEntry ranking = 1; }
+message GetChallengeMusicRankingRequest {
+  int64 challenge_music_id = 1;
+}
+message GetChallengeMusicRankingResponse {
+  repeated ChallengeLiveRankingPlayer players = 1;
+  int32 my_rank = 2;
+  int32 my_score = 3;
+}
+message ChallengeLiveRankingPlayer {
+  entity.PlayerSimpleProfile player_data = 1;
+  int32 score = 3;
+  entity.DeckDetail high_score_deck = 4;
+}

@@ -1,0 +1,23 @@
+syntax = "proto3";
+package app.present;
+option csharp_namespace = "App.Protobuf.Present";
+import "entity/present.proto";
+import "entity/player.proto";
+
+message FetchRequest {}
+message FetchResponse {
+  repeated entity.Present presents = 1;
+}
+message OpenRequest { repeated uint64 present_ids = 1; }
+message OpenResponse {
+  repeated entity.PresentUnreceived unreceived = 1;
+  entity.Notification notification = 2;
+}
+message HistoryRequest {}
+message HistoryResponse { repeated entity.PresentHistory histories = 1; }
+
+service PresentService {
+  rpc Fetch(FetchRequest) returns (FetchResponse);
+  rpc Open(OpenRequest) returns (OpenResponse);
+  rpc History(HistoryRequest) returns (HistoryResponse);
+}

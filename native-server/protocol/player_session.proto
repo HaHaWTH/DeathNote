@@ -1,0 +1,14 @@
+syntax = "proto3";
+package app.player;
+import "entity/player.proto";
+import "entity/login_bonus.proto";
+import "entity/comeback.proto";
+
+message LoginRequest {}
+
+message LoginResponse {
+  repeated entity.LoginBonusSheet login_bonus_update = 1;
+  entity.Comeback comeback = 2;
+  entity.Vip vip = 3;
+  entity.Notification notification = 4;
+}

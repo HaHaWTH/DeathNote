@@ -1,0 +1,8 @@
+capstone==5.0.9
+cryptography==50.0.1
+h2==4.4.1
+lz4==4.4.5
+py3rijndael==0.3.3
+pyelftools==0.33
+requests==2.34.2
+urllib3==2.8.0

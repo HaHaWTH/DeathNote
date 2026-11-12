@@ -1,0 +1,11 @@
+syntax = "proto3";
+package app.live;
+option csharp_namespace = "App.Protobuf.Live";
+message CheckMaintenanceCasualMatchRequest {}
+message CheckMaintenanceCasualMatchResponse {}
+message CheckMaintenanceRankMatchRequest {}
+message CheckMaintenanceRankMatchResponse {}
+service LiveService {
+  rpc CheckMaintenanceRankMatch(CheckMaintenanceRankMatchRequest) returns (CheckMaintenanceRankMatchResponse);
+  rpc CheckMaintenanceCasualMatch(CheckMaintenanceCasualMatchRequest) returns (CheckMaintenanceCasualMatchResponse);
+}

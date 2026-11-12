@@ -1,0 +1,53 @@
+syntax = "proto3";
+package app.live;
+
+import "entity/player.proto";
+import "entity/resource.proto";
+import "entity/live_finish.proto";
+import "entity/live_battle.proto";
+
+message StartBattleLiveRequest {
+  int64 music_id = 1;
+  int32 difficulty = 2;
+  int32 boost = 3;
+  int32 deck_id = 4;
+  string room_id = 5;
+  int64 lobby_id = 6;
+}
+message StartBattleLiveResponse {}
+
+message FinishBattleLiveRequest {
+  entity.LiveFinish live_finish = 1;
+  entity.BattleLivePlayerResult player_result = 2;
+  repeated entity.GekisouRanking gekisou_rankings = 3;
+  int32 player_count = 4;
+}
+message FinishBattleLiveResponse {
+  repeated int64 reward_id = 1 [deprecated = true];
+  repeated entity.LiveEventReward event_reward = 2 [deprecated = true];
+  repeated int64 highscore_reward_id = 3 [deprecated = true];
+  repeated entity.RewardResource music_rewards = 4;
+  entity.Notification notification = 5;
+  repeated int64 battle_live_reward_ids = 6 [deprecated = true];
+  repeated int64 battle_live_gekisou_reward_ids = 7 [deprecated = true];
+  repeated int64 total_highscore_rating_reward_ids = 8;
+  repeated entity.BandHighScoreRatingReward band_highscore_rating_rewards = 9;
+}
+
+message GetBattleLiveResultRequest {}
+message GetBattleLiveResultResponse {
+  repeated entity.BattleLivePlayerResult player_result = 1;
+  repeated int64 battle_live_gekisou_reward_ids = 2 [deprecated = true];
+  entity.GekisouRankingRewardState reward_state = 3;
+  repeated int64 battle_live_reward_ids = 4 [deprecated = true];
+  repeated entity.LiveEventReward event_reward = 5;
+  entity.Notification notification = 6;
+  repeated entity.BattleLiveRewardResource battle_live_rewards = 7;
+  repeated entity.RewardResource campaign_drop_rewards = 8;
+}
+
+message GetBattleLiveSearchIdRequest {}
+message GetBattleLiveSearchIdResponse { int32 search_id = 1; }
+message FetchBattleLiveInvitationResponse {
+  repeated entity.BattleLiveInvitation invitations = 1;
+}

@@ -1,0 +1,38 @@
+syntax = "proto3";
+package entity;
+import "entity/resource.proto";
+
+message OfflineBonusResource {
+  ResourceType resource_type = 1;
+  int64 resource_id = 2;
+  int32 resource_count = 3;
+}
+message OfflineBonus {
+  int32 ad_view_count = 1;
+  optional int64 last_ad_viewed_at = 2;
+}
+message OfflineBonusUnitLite {
+  int64 offline_bonus_unit_id = 1;
+  int32 exp = 2;
+  int64 start_at = 3;
+  bool is_stock_rewards = 4;
+}
+message OfflineBonusUnit {
+  int64 offline_bonus_unit_id = 1;
+  int32 exp = 2;
+  int64 start_at = 3;
+  int32 reward_coin = 4;
+  int32 reward_member_exp = 5;
+  int32 reward_support_exp = 6;
+  int32 reward_offline_bonus_exp = 7;
+  repeated OfflineBonusResource reward_resources = 8;
+}
+message OfflineBonusUnitResult {
+  OfflineBonusUnit offline_bonus_unit = 1;
+  repeated OfflineBonusResource accumulated_rewards = 2;
+  repeated OfflineBonusResource lot_rewards = 3;
+}
+message OfflineBonusStartAt {
+  int64 unit_id = 1;
+  int64 start_at = 2;
+}

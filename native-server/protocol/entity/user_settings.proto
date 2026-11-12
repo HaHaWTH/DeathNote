@@ -1,0 +1,4 @@
+syntax = "proto3";
+package entity;
+message LiveSetting { bytes setting_all = 1; }
+message MusicPuzzle { int64 music_id = 1; string result_json = 2; }

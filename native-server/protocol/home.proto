@@ -1,0 +1,25 @@
+syntax = "proto3";
+package app.home;
+
+import "entity/player.proto";
+import "entity/home.proto";
+import "entity/login_bonus.proto";
+import "entity/entitlements.proto";
+
+message GetHomeRequest {}
+
+message GetHomeResponse {
+  repeated entity.Announcement announcements = 1;
+  repeated entity.LoginBonusSheet login_bonus_update = 2;
+  entity.Notification notification = 3;
+  entity.Friends friends = 4;
+  repeated entity.InvitationProfile invitations = 5;
+  int32 player_favorite = 6;
+  repeated entity.MonthlyPassState monthly_passes = 8;
+  repeated entity.MonthlyPassDailyReward monthly_pass_daily_rewards = 9;
+  entity.PersonalNotification personal_notification = 10;
+}
+
+service HomeService {
+  rpc Get(GetHomeRequest) returns (GetHomeResponse);
+}

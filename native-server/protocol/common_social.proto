@@ -1,0 +1,15 @@
+syntax = "proto3";
+package app.live;
+option csharp_namespace = "App.Protobuf.Live";
+
+import public "gem.proto";
+import public "shop.proto";
+import public "social_queries/invitation.proto";
+import public "serial_code.proto";
+
+message SendBattleLiveInvitationRequest {
+  int64 lobby_id = 1;
+  repeated string target_player_ids = 2;
+  string host_player_id = 3;
+}
+message RemoveBattleLiveInvitationRequest { int64 lobby_id = 1; }

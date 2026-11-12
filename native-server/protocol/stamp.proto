@@ -1,0 +1,18 @@
+syntax = "proto3";
+package app.stamp;
+import "entity/stamp_favorites.proto";
+
+message UpdateStampFavoritesRequest {
+  repeated entity.UpdateStampFavorite favorites = 1;
+}
+message UpdateStampFavoritesResponse {}
+message UpdateStampFavoriteNameRequest {
+  int32 favorite_id = 1;
+  string name = 2;
+}
+message UpdateStampFavoriteNameResponse {}
+
+service StampService {
+  rpc UpdateStampFavorites(UpdateStampFavoritesRequest) returns (UpdateStampFavoritesResponse);
+  rpc UpdateStampFavoriteName(UpdateStampFavoriteNameRequest) returns (UpdateStampFavoriteNameResponse);
+}

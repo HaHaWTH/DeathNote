@@ -1,0 +1,10 @@
+syntax = "proto3";
+package app.player;
+option csharp_namespace = "App.Protobuf.Player";
+import "entity/character_costume.proto";
+
+message SetCurrentCostumesRequest {
+  repeated entity.CharacterCurrentCostume character_current_costumes = 1;
+}
+
+message SetCurrentCostumesResponse {}

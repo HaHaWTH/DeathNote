@@ -1,0 +1,41 @@
+syntax = "proto3";
+package app.live;
+import "entity/player.proto";
+import "entity/live_finish.proto";
+import "entity/resource.proto";
+import "entity/try_live_110.proto";
+
+message StartTryLiveRequest {
+  int64 try_music_id = 1;
+  int32 difficulty = 2;
+  int32 boost = 3;
+  int32 deck_id = 4;
+}
+message StartTryLiveResponse {}
+message FinishTryLiveRequest {
+  int64 event_id = 1;
+  entity.LiveFinish live_finish = 2;
+}
+message FinishTryLiveResponse {
+  repeated int64 reward_id = 1;
+  repeated entity.LiveEventReward event_reward = 2;
+  repeated int64 total_highscore_rating_reward_ids = 3;
+  repeated entity.BandHighScoreRatingReward band_highscore_rating_rewards = 4;
+  repeated entity.RewardResource music_rewards = 5;
+  entity.Notification notification = 6;
+  repeated entity.RewardResource campaign_drop_rewards = 7;
+  entity.TryLiveResult try_result = 8;
+}
+message SkipTryLiveRequest {
+  int64 try_music_id = 1;
+  int32 difficulty = 2;
+  int32 boost = 3;
+  int32 deck_id = 4;
+  int32 current_deck_total_power = 5;
+}
+message SkipTryLiveResponse {
+  repeated int64 reward_id = 1;
+  repeated entity.LiveEventReward event_reward = 2;
+  entity.Notification notification = 3;
+  repeated entity.RewardResource campaign_drop_rewards = 4;
+}

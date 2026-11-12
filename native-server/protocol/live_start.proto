@@ -1,0 +1,14 @@
+syntax = "proto3";
+package app.live;
+
+message StartFreeRequest {
+  int64 music_id = 1;
+  int32 difficulty = 2;
+  int32 boost = 3;
+  int32 deck_id = 4;
+}
+
+message StartFreeResponse {}
+
+message CheckMaintenanceFreeRequest {}
+message CheckMaintenanceFreeResponse {}

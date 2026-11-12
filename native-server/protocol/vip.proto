@@ -1,0 +1,34 @@
+syntax = "proto3";
+package app.vip;
+import "entity/player.proto";
+
+service VipService {
+  rpc Fetch(FetchVipRequest) returns (FetchVipResponse);
+  rpc ReceivePoint(ReceivePointRequest) returns (ReceivePointResponse);
+  rpc ReceiveReward(ReceiveRewardRequest) returns (ReceiveRewardResponse);
+  rpc ReceiveRankupReward(ReceiveRankupRewardRequest) returns (ReceiveRankupRewardResponse);
+}
+message FetchVipRequest {}
+message FetchVipResponse {
+  entity.Vip vip = 1;
+  repeated int32 purchased_vip_pack_ranks = 2;
+}
+
+message ReceivePointRequest { int32 consecutive_login_count = 1; }
+message ReceivePointResponse {
+  entity.Vip vip = 1;
+  entity.Notification notification = 2;
+}
+message ReceiveRewardRequest {
+  int32 vip_rank = 1;
+  int32 day_number = 2;
+}
+message ReceiveRewardResponse {
+  entity.Vip vip = 1;
+  entity.Notification notification = 2;
+}
+message ReceiveRankupRewardRequest { int32 vip_rank = 1; }
+message ReceiveRankupRewardResponse {
+  entity.Vip vip = 1;
+  entity.Notification notification = 2;
+}

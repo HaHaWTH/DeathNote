@@ -1,0 +1,87 @@
+syntax = "proto3";
+package entity;
+
+message LiveFinish {
+  int32 clear_status = 1;
+  int32 solo_score = 2;
+  int32 combo = 3;
+  repeated int32 judgements = 4;
+  repeated LiveSupportSkill support_skills = 5;
+  repeated LiveGekisouSkill gekisou_skills = 6;
+  repeated LiveGekisouSupportSkill gekisou_support_skills = 7;
+  repeated JudgementCount judgement_counts = 9;
+  int32 current_deck_total_power = 10;
+  string live_unique_id = 11;
+  bytes live_score_report = 12;
+}
+
+message LiveSupportSkill {
+  int64 support_card_id = 1;
+  int64 skill_id = 2;
+}
+
+message LiveGekisouSkill {
+  int64 member_id = 1;
+  int64 skill_id = 2;
+}
+
+message LiveGekisouSupportSkill {
+  int64 support_card_id = 1;
+  int64 skill_id = 2;
+}
+
+message JudgementCount {
+  int32 judgement = 1;
+  int32 total_count = 2;
+}
+
+message LiveEventReward {
+  int64 event_id = 1;
+  int64 reward_id = 2;
+}
+
+message BandHighScoreRatingReward {
+  int64 band_id = 1;
+  repeated int64 reward_ids = 2;
+}
+
+message LiveScore {
+  int32 high_score = 1;
+  int32 clear_status = 2;
+  int64 music_id = 3;
+  int32 difficulty = 4;
+  int32 mode = 5;
+  int32 max_combo = 6;
+}
+
+message LiveMusic {
+  int64 music_id = 1;
+  int64 got_at = 2;
+}
+
+message LiveMusicReward {
+  int64 music_id = 1;
+  int32 score_rank_reward_gained = 2;
+  int32 combo_reward_gained = 3;
+}
+
+message LiveMusicComboReward {
+  int64 music_id = 1;
+  int32 difficulty = 2;
+  int32 combo_reward_gained = 3;
+}
+
+message CharacterRank {
+  int64 character_id = 1;
+  int32 exp = 2;
+}
+
+message CharacterFriendship {
+  int64 friendship_id = 1;
+  int32 exp = 2;
+}
+
+message CharacterFriendshipRankReward {
+  int64 friendship_id = 1;
+  int64 reward_id = 2;
+}

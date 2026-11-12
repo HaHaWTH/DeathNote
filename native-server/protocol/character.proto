@@ -1,0 +1,17 @@
+syntax = "proto3";
+package app.character;
+
+import "entity/player.proto";
+import "entity/live_finish.proto";
+
+service CharacterService {
+  rpc GainFriendshipRankReward (GainFriendshipRankRewardRequest) returns (GainFriendshipRankRewardResponse);
+}
+
+message GainFriendshipRankRewardRequest {
+  repeated entity.CharacterFriendshipRankReward rewards = 1;
+}
+
+message GainFriendshipRankRewardResponse {
+  entity.Notification notification = 1;
+}

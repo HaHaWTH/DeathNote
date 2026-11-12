@@ -1,0 +1,16 @@
+syntax = "proto3";
+package app.serial_code;
+option csharp_namespace = "App.Protobuf.SerialCode";
+import "entity/player.proto";
+import "entity/serial_code.proto";
+
+message RedeemSerialCodeRequest { string serial_code = 1; }
+message RedeemSerialCodeResponse {
+  string status = 1;
+  repeated entity.SerialCodeRewards rewards = 2;
+  entity.Notification notification = 3;
+}
+
+service SerialCodeService {
+  rpc RedeemSerialCode(RedeemSerialCodeRequest) returns (RedeemSerialCodeResponse);
+}

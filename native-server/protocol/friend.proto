@@ -1,0 +1,60 @@
+syntax = "proto3";
+package app.friend;
+import "entity/player.proto";
+
+message FriendApprovalRequest {
+  string target_player_id = 1;
+  string search_route = 2;
+}
+message FriendApprovalResponse {
+  reserved 1;
+  bool is_accepted = 2;
+  entity.Notification notification = 3;
+  entity.PlayerSimpleProfile player_profile = 4;
+}
+
+message FriendRequestWithdrawalRequest {
+  string target_player_id = 1;
+}
+message FriendRequestWithdrawalResponse {}
+
+message FriendAnswerRequest {
+  repeated string target_player_ids = 1;
+  bool answer = 2;
+}
+message FriendAnswerResponse {
+  reserved 1;
+  entity.Notification notification = 2;
+  repeated entity.PlayerSimpleProfile player_profiles = 3;
+}
+
+message FriendUnlinkRequest {
+  string friend_player_id = 1;
+}
+message FriendUnlinkResponse {
+  entity.Notification notification = 1;
+}
+
+message PlayerReportRequest {
+  string target_player_id = 1;
+  int32 report_type = 2;
+  repeated int64 report_ids = 3;
+}
+message PlayerReportResponse {}
+
+message FindByProfileIDRequest {
+  int64 player_profile_id = 1;
+}
+message FindByProfileIDResponse {
+  reserved 1;
+  entity.PlayerSimpleProfile player_profile = 2;
+}
+
+service FriendService {
+  rpc FriendRequest(FriendApprovalRequest) returns (FriendApprovalResponse);
+  rpc FriendRequestWithdrawal(FriendRequestWithdrawalRequest) returns (FriendRequestWithdrawalResponse);
+  rpc FriendAnswer(FriendAnswerRequest) returns (FriendAnswerResponse);
+  rpc FriendUnlink(FriendUnlinkRequest) returns (FriendUnlinkResponse);
+  rpc PlayerReport(PlayerReportRequest) returns (PlayerReportResponse);
+  rpc FindByProfileID(FindByProfileIDRequest) returns (FindByProfileIDResponse);
+}

@@ -1,0 +1,15 @@
+syntax = "proto3";
+package app.banditem;
+import "entity/player.proto";
+
+message LevelUpRequest {
+  int64 band_item_master_id = 1;
+  int32 to_level = 2;
+}
+message LevelUpResponse {
+  entity.Notification notification = 1;
+}
+
+service BandItemService {
+  rpc LevelUp(LevelUpRequest) returns (LevelUpResponse);
+}

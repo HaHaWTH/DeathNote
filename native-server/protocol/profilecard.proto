@@ -1,0 +1,41 @@
+syntax = "proto3";
+package app.profilecard;
+option csharp_namespace = "App.Protobuf.ProfileCard";
+import "entity/player.proto";
+import "entity/profilecard.proto";
+
+message SaveProfileCardRequest {
+  int32 slot = 1;
+  int32 index = 2;
+  string profile_object_json = 3;
+  string key = 4;
+  int32 disp_order = 5;
+}
+message SaveProfileCardResponse {
+  int32 slot = 1;
+  entity.ProfileObject profile_object = 2;
+  entity.Notification notification = 3;
+}
+message EditProfileCardSlotRequest { int32 slot = 1; string name = 2; }
+message EditProfileCardSlotResponse {}
+message SettingProfileCardRequest { int32 slot = 1; bool is_setting = 2; }
+message SettingProfileCardResponse {}
+message ObjectForPut { string key = 1; bytes body = 2; string content_type = 3; }
+message PutObjectsRequest { repeated ObjectForPut objects = 1; }
+message PutObjectsResponse { repeated string errors = 1; repeated string thumbnail_urls = 2; }
+message UpdateProfileCardDispOrderRequest {
+  int32 slot = 1;
+  repeated int32 disp_orders = 2 [packed = true];
+}
+message UpdateProfileCardDispOrderResponse {}
+message RemoveProfileCardRequest { int32 slot = 1; int32 index = 2; }
+message RemoveProfileCardResponse {}
+
+service ProfileCardService {
+  rpc SaveProfileCard(SaveProfileCardRequest) returns (SaveProfileCardResponse);
+  rpc EditProfileCardSlot(EditProfileCardSlotRequest) returns (EditProfileCardSlotResponse);
+  rpc SettingProfileCard(SettingProfileCardRequest) returns (SettingProfileCardResponse);
+  rpc PutObjects(PutObjectsRequest) returns (PutObjectsResponse);
+  rpc UpdateProfileCardDispOrder(UpdateProfileCardDispOrderRequest) returns (UpdateProfileCardDispOrderResponse);
+  rpc RemoveProfileCard(RemoveProfileCardRequest) returns (RemoveProfileCardResponse);
+}

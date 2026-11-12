@@ -1,0 +1,11 @@
+syntax = "proto3";
+package app.player;
+
+message ChangeFavoriteMemberRequest { int64 member_id = 1; }
+message ChangeFavoriteMemberResponse {}
+message GetCharacterOrdersRequest {}
+message GetCharacterOrdersResponse { repeated int64 character_orders = 1; }
+message SaveCharacterOrdersRequest { repeated int64 character_orders = 1; }
+message SaveCharacterOrdersResponse {}
+message SetNotificationSettingRequest { bool is_night_notice_off = 1; }
+message SetNotificationSettingResponse {}

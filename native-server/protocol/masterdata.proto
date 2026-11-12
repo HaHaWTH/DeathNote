@@ -1,0 +1,11 @@
+syntax = "proto3";
+package app.masterdata;
+
+service MasterdataService {
+  rpc Version(VersionRequest) returns (VersionResponse);
+}
+message VersionRequest {}
+message VersionResponse {
+  string masterVersion = 1;
+  string resourceVersion = 2;
+}

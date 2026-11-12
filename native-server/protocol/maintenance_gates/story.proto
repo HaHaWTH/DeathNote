@@ -1,0 +1,8 @@
+syntax = "proto3";
+package app.story;
+option csharp_namespace = "App.Protobuf.Story";
+message CheckMaintenanceStoryRequest {}
+message CheckMaintenanceStoryResponse {}
+service StoryService {
+  rpc CheckMaintenanceStory(CheckMaintenanceStoryRequest) returns (CheckMaintenanceStoryResponse);
+}

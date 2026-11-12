@@ -1,0 +1,45 @@
+syntax = "proto3";
+package app.membercard;
+option csharp_namespace = "App.Protobuf.MemberCard";
+import "entity/player.proto";
+
+message LevelUpRequest {
+  int64 member_card_master_id = 1;
+  int32 to_level = 2;
+  int32 highest_total_power = 3;
+}
+message LevelUpResponse { entity.Notification notification = 1; }
+message AwakeRequest {
+  int64 member_card_master_id = 1;
+  int32 to_awake_count = 2;
+  int32 highest_total_power = 3;
+}
+message AwakeResponse { entity.Notification notification = 1; }
+message SkillLevelUpRequest {
+  int64 member_card_master_id = 1;
+  int32 to_level = 2;
+  int32 highest_total_power = 3;
+}
+message SkillLevelUpResponse { entity.Notification notification = 1; }
+message RankUpUseItem {
+  int64 id = 1;
+  int32 amount = 2;
+  int32 type = 3;
+}
+message RankUpRequest {
+  int64 member_card_master_id = 1;
+  int32 to_card_rank = 2;
+  repeated RankUpUseItem use_items = 3;
+  int32 highest_total_power = 4;
+}
+message RankUpResponse { entity.Notification notification = 1; }
+service MemberCardService {
+  rpc LevelUp(LevelUpRequest) returns (LevelUpResponse);
+  rpc Awake(AwakeRequest) returns (AwakeResponse);
+  rpc LeaderSkillLevelUp(SkillLevelUpRequest) returns (SkillLevelUpResponse);
+  rpc LinkSkillLevelUp(SkillLevelUpRequest) returns (SkillLevelUpResponse);
+  rpc LiveSkillLevelUp(SkillLevelUpRequest) returns (SkillLevelUpResponse);
+  rpc PerformanceSkillLevelUp(SkillLevelUpRequest) returns (SkillLevelUpResponse);
+  rpc GekisouSkillLevelUp(SkillLevelUpRequest) returns (SkillLevelUpResponse);
+  rpc RankUp(RankUpRequest) returns (RankUpResponse);
+}

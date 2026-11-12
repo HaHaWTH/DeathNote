@@ -1,0 +1,12 @@
+syntax = "proto3";
+package app.carousel_help;
+
+message ShownRequest {
+  repeated int64 master_ids = 1;
+}
+
+message ShownResponse {}
+
+service CarouselHelpService {
+  rpc Shown(ShownRequest) returns (ShownResponse);
+}

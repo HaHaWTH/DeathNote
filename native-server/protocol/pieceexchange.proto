@@ -1,0 +1,15 @@
+syntax = "proto3";
+package app.pieceexchange;
+option csharp_namespace = "App.Protobuf.PieceExchange";
+import "entity/player.proto";
+
+message Piece { int64 id = 1; int32 count = 2; }
+message DuplicateSupportCard { int64 support_card_master_id = 1; int32 count = 2; }
+message PieceExchangeRequest {
+  repeated Piece pieces = 1;
+  repeated DuplicateSupportCard support_cards = 2;
+}
+message PieceExchangeResponse { entity.Notification notification = 1; }
+service PieceExchangeService {
+  rpc Exchange(PieceExchangeRequest) returns (PieceExchangeResponse);
+}

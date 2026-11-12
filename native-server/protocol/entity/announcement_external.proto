@@ -1,0 +1,7 @@
+syntax = "proto3";
+package entity;
+
+message AnnouncementExternalContent {
+  int64 id = 1;
+  string banner_path = 2;
+}

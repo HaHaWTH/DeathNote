@@ -1,0 +1,8 @@
+syntax = "proto3";
+package app.feature_switch;
+
+service FeatureSwitchService {
+  rpc Get(GetRequest) returns (GetResponse);
+}
+message GetRequest {}
+message GetResponse { map<string, bool> switches = 1; }

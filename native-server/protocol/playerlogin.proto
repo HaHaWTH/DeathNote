@@ -1,0 +1,50 @@
+syntax = "proto3";
+package app.playerlogin;
+
+import "entity/player.proto";
+
+service PlayerLoginService {
+  rpc GetServerList(GetServerListRequest) returns (GetServerListResponse);
+  rpc PlayerPreLogin(PlayerLoginRequest) returns (PlayerPreLoginResponse);
+  rpc PlayerLogin(PlayerLoginRequest) returns (PlayerLoginResponse);
+}
+message GetServerListRequest {}
+message GetServerListResponse { repeated ServerInfo servers = 1; }
+message ServerInfo {
+  string name = 1;
+  string cdnRoots = 2;
+  string apiServerRoots = 3;
+  string chatServerRoots = 4;
+  string atServerRoots = 5;
+  string liveServers = 6;
+  string displayName = 7;
+  string areaId = 8;
+  string ageIconSpriteName = 9;
+}
+
+message PlayerLoginRequest {
+  string sdkUid = 1;
+  string sdkAccessToken = 2;
+  uint32 platform = 3;
+  string deviceModel = 4;
+  string operatingSystem = 5;
+  string clientVersion = 6;
+  PlayerUuid uuid = 7;
+  string clientPackage = 8;
+  string initial_data_group = 9;
+  uint32 globalChannelId = 10;
+  uint32 brandId = 11;
+  uint32 areaId = 12;
+  string idToken = 13;
+}
+message PlayerUuid {
+  string adId = 1;
+  string identifier = 2;
+}
+message PlayerPreLoginResponse { bool isAccountCreated = 1; }
+message PlayerLoginResponse {
+  entity.PlayerCredential credential = 1;
+  string cpServerId = 2;
+  string cpServerName = 3;
+  uint32 isNewUser = 4;
+}

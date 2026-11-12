@@ -1,0 +1,44 @@
+syntax = "proto3";
+package app.order;
+
+service OrderService {
+  rpc CreateOrder(CreateOrderRequest) returns (CreateOrderResponse);
+  rpc PaymentSuccessPolling(PaymentSuccessPollingRequest) returns (PaymentSuccessPollingResponse);
+}
+message CreateOrderRequest {
+  string playerId = 1;
+  string userName = 2;
+  uint32 mallItemId = 3;
+  uint32 quantity = 4;
+  string provider = 5;
+  string pay_currency = 6;
+}
+message CreateOrderResponse {
+  string outTradeNo = 1;
+  string extension_info = 2;
+  string notify_url = 3;
+  string order_sign = 4;
+  string product_id = 5;
+  string product_name = 6;
+  string product_desc = 7;
+  int64 amount = 8;
+  int64 game_money = 9;
+  string pay_type = 10;
+}
+message PaymentSuccessPollingRequest {
+  string playerId = 1;
+  string outTradeNo = 2;
+  string transactionId = 3;
+  string orderNo = 4;
+  uint32 globalChannelId = 5;
+  uint32 brandId = 6;
+  uint32 areaId = 7;
+}
+message PaymentSuccessPollingResponse {
+  string outTradeNo = 1;
+  string playerId = 2;
+  uint32 mallItemId = 3;
+  string provider = 4;
+  string transactionId = 5;
+  string status = 6;
+}

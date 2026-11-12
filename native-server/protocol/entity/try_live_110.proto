@@ -1,0 +1,28 @@
+syntax = "proto3";
+package entity;
+import "entity/resource.proto";
+
+message TryProgress {
+  int32 try_type = 1;
+  int32 level = 2;
+}
+message TryMusicScore {
+  int64 try_music_id = 1;
+  int32 high_score = 2;
+}
+message TryEvent {
+  int64 event_id = 1;
+  repeated TryProgress progresses = 2;
+  repeated TryMusicScore music_scores = 3;
+}
+message TryLiveResult {
+  repeated int64 cleared_try_mission_ids = 1;
+  int32 gained_event_point = 2;
+  repeated RewardResource gained_rewards = 3;
+  repeated TryProgress progresses = 4;
+  repeated RewardResource try_level_rewards = 5;
+  int64 try_music_id = 6;
+  int32 try_music_high_score = 7;
+  int64 try_music_total_score = 8;
+  repeated RewardResource try_music_total_score_rewards = 9;
+}

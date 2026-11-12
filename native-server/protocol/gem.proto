@@ -1,0 +1,11 @@
+syntax = "proto3";
+package app.gem;
+option csharp_namespace = "App.Protobuf.Gem";
+import "entity/gem.proto";
+
+message HistoryRequest {}
+message HistoryResponse { repeated entity.GemHistory histories = 1; }
+
+service GemService {
+  rpc History(HistoryRequest) returns (HistoryResponse);
+}
