@@ -9,26 +9,26 @@ $deathNotePython = ".\.venv\Scripts\python.exe"
 
 ## Versions and data
 
-Place a matching APK at `client.apk` for official version queries and master decoding. On an existing instance, use `update --check` to compare versions and `update --backup` to save a recovery point before refreshing the master data.
+Import an official public snapshot from a compatible installation. Pass the directory that contains `.native-server/public/`.
+
+```powershell
+& $deathNotePython -m deathnote import-public "D:\snapshot-source"
+```
+
+The import verifies the version metadata, manifest and master data. It also copies matching iOS catalog pairs when present. Those catalogs are used by the local resource mirror and custom chart candidates. Each instance manages its own configuration, accounts and TLS identity.
+
+Run `update --check` to compare with official data for the imported snapshot's client version and region. To install newer data, prepare the new snapshot in the source installation and import it again. Pass `--backup` to save the current version, master data and player database first.
 
 ```powershell
 & $deathNotePython -m deathnote update --check
-& $deathNotePython -m deathnote update --backup
+& $deathNotePython -m deathnote import-public "D:\snapshot-source" --backup
 ```
-
-Pass `--catalogs` to an update to fetch the matching iOS resource catalogs. These catalogs are used by the local resource mirror and custom chart candidates.
-
-To seed DeathNote from an existing Native Server installation, import its official public snapshot into the new instance:
-
-```powershell
-& $deathNotePython -m deathnote import-public "D:\old-instance"
-```
-
-The import copies the selected official version metadata, manifest, master data and any matching iOS catalog pairs. It validates the raw master files against the manifest. The instance's configuration, accounts and TLS identity are managed separately.
 
 ## Configure the instance
 
-`init --lan-ip 192.168.10.20` creates local setup files and a development CA. Replace the example address with the server computer's LAN address. The game API needs a server certificate covering the names routed to DeathNote and accepted by the client's TLS trust configuration. Set `certFile`, `keyFile` and, when applicable, `chainFile` in `.native-server/config.json` to the files for your deployment. Relative paths are resolved from the DeathNote directory.
+`init --lan-ip 192.168.10.20` writes the LAN settings and default game TLS paths to `.native-server/config.json`. Use the server computer's LAN address.
+
+Supply a PEM certificate that covers the names routed to DeathNote and a matching PEM private key. Place them at `.native-server/server.crt` and `.native-server/server.key`. Set `certFile` and `keyFile` in the config to use different paths, and set `chainFile` if you supply the certificate chain in a separate PEM file. Relative config paths are resolved from the DeathNote directory. For a foreground run, `--cert-file`, `--key-file` and `--chain-file` override these paths.
 
 Set the test device's Wi-Fi DNS to the server computer's LAN address when the local DNS listener is in use. Configure `hostnames` for additional game endpoints and `dnsUpstream` for forwarded DNS queries. The service includes the bootstrap and current API hostname in its DNS mapping. With `resourceMirror` enabled, it also includes the resource hostname.
 
@@ -39,7 +39,7 @@ Set the test device's Wi-Fi DNS to the server computer's LAN address when the lo
 | Gekisou | TCP 9001 | Room transport |
 | Resource mirror | TCP 8767 | Optional local resource endpoint |
 | Image HTTPS | TCP 8768 | Optional announcement and profile-card image endpoint |
-| Certificate download | TCP 8766 | Optional setup page for a development CA |
+| Certificate download | TCP 8766 | Optional page for public CA downloads |
 
 For a foreground process with DNS enabled, run:
 
@@ -47,7 +47,7 @@ For a foreground process with DNS enabled, run:
 & $deathNotePython -m deathnote run --console --host 0.0.0.0 --dns-upstream 1.1.1.1
 ```
 
-Type `help`, `status`, `version`, `players` or `stop` in the running console. The `players` command lists stored local profiles. Ctrl+C also stops the foreground server. The low ports may need elevated privileges on your platform. To serve the optional development CA download page on the LAN, append `--setup-port 8766`.
+Type `help`, `status`, `version`, `players` or `stop` in the running console. The `players` command lists stored local profiles. Ctrl+C also stops the foreground server. The low ports may need elevated privileges on your platform. To serve public CA downloads from `.native-server/setup`, append `--setup-port 8766`. To prepare and serve files from a public CA PEM, run `python -m deathnote.net.setup --ca-file path/to/ca.pem`.
 
 On Windows, the `start`, `stop` and `restart` subcommands control the background process. Run `python -m deathnote status` for readiness and tracked process status, or `python -m deathnote logs --lines 20` for recent request summaries. Stop the game service before changing versions or importing data.
 
@@ -68,4 +68,4 @@ Use `python -m deathnote image-certificate --lan-ip 192.168.10.20 --coverage sin
 | `native-server/announcements/` | One subdirectory per announcement, with `announcement.json` and optional images |
 | `native-server/serial-codes/` | Local redemption code definitions |
 
-`update --backup` backs up the current public version and a consistent copy of the player database before updating. Keep instance files with the deployment when replacing the source tree. Recreate the Python virtual environment when moving the installation.
+Keep instance files with the deployment when replacing the source tree. Recreate the Python virtual environment when moving the installation.

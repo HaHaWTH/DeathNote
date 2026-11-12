@@ -1,10 +1,9 @@
-"""Publish an explicitly prepared local CA and serve its download page."""
+"""Serve a download page for supplied public CA material."""
 from __future__ import annotations
 
 from functools import partial
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-import shutil
 
 from deathnote.paths import STATE
 
@@ -24,14 +23,6 @@ and enable trust for the installed root.</p>
 </html>'''.encode('utf8')
 FILES = {'/CA.mobileconfig': ('CA.mobileconfig', 'application/x-apple-aspen-config'),
          '/rootCA.der': ('rootCA.der', 'application/pkix-cert')}
-
-
-def publish_setup(state_dir, destination):
-    state_dir, destination = Path(state_dir), Path(destination)
-    destination.mkdir(parents=True, exist_ok=True)
-    for name, _ in FILES.values():
-        shutil.copyfile(state_dir / name, destination / name)
-    (destination / 'index.html').write_bytes(PAGE)
 
 
 class SetupHandler(BaseHTTPRequestHandler):

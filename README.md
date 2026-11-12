@@ -26,14 +26,14 @@ Use Python 3.12. The included process controls target Windows.
 
 If Python is available through a standalone executable, pass its path to `install.cmd`.
 
-Place your matching Android client package at `client.apk` in this directory. Set up the official master data, then initialize the instance with the server computer's LAN address:
+Prepare an official public-data snapshot in a compatible installation. Import it and initialize the instance with the server computer's LAN address.
 
 ```powershell
-.\.venv\Scripts\python.exe -m deathnote update
+.\.venv\Scripts\python.exe -m deathnote import-public "D:\snapshot-source"
 .\.venv\Scripts\python.exe -m deathnote init --lan-ip 192.168.114.51
 ```
 
-Replace the example address with the server computer's LAN address and configure game API TLS. Run `.\start.cmd` to open the foreground server console. Type `help` to see the commands and `stop` to shut down. See the [operations guide](docs/operations.md) for DNS, certificate setup, data imports and backups.
+Replace the example address with the server computer's LAN address. Place your PEM game certificate and key in `.native-server/server.crt` and `.native-server/server.key`. Run `.\start.cmd` to open the foreground server console. Type `help` to see the commands and `stop` to shut down. See the [operations guide](docs/operations.md) for DNS, certificate setup, data imports and backups.
 
 ## Project layout
 
@@ -44,7 +44,7 @@ Replace the example address with the server computer's LAN address and configure
 | `deathnote/game/` | Player accounts, live play, progression, commerce and social features |
 | `deathnote/net/` | HTTP/2, TLS, DNS, WebSocket and live room transport |
 | `deathnote/protocol/` | RPC errors and protobuf encoding and decoding |
-| `deathnote/data/` | Client input, version sync, resource mirroring and chart candidates |
+| `deathnote/data/` | Snapshot import, version checks, resource mirroring and chart candidates |
 | `scripts/` | Windows background service control |
 | `native-server/protocol/` | Recovered protocol definitions |
 | `docs/` | Setup and operations |

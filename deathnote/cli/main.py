@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 from importlib import metadata
+from ipaddress import IPv4Address
 import json
 import os
 from pathlib import Path
@@ -11,6 +12,7 @@ import sys
 from urllib.parse import urlsplit
 
 from deathnote.data.version import read_version
+from deathnote.net.tls import DEFAULT_GAME_CERTIFICATE, DEFAULT_GAME_KEY
 from deathnote.paths import ROOT, STATE, VERSION
 from deathnote.server import run
 
@@ -37,8 +39,8 @@ def local_status(root=ROOT, version_file=None):
     return {
         'stateDirectory': str(state), 'versionFile': str(version_file),
         'versionAvailable': bool(version),
-        'serverCertificateAvailable': (root / config.get('certFile', '.native-server/server.crt')).is_file(),
-        'serverKeyAvailable': (root / config.get('keyFile', '.native-server/server.key')).is_file(),
+        'serverCertificateAvailable': (root / config.get('certFile', DEFAULT_GAME_CERTIFICATE)).is_file(),
+        'serverKeyAvailable': (root / config.get('keyFile', DEFAULT_GAME_KEY)).is_file(),
         'configurationAvailable': config_path.is_file(),
         'lanIp': config.get('lanIp'), 'hostnames': hostnames,
         'resourceMirror': resource_mirror,
@@ -152,40 +154,29 @@ def status(args):
 
 def init(args):
     from deathnote.game.bootstrap import BOOTSTRAP_HOST
-    from deathnote.net.setup import publish_setup
-    from deathnote.net.tls import create_local_pki
+    lan_ip = str(IPv4Address(args.lan_ip))
     config_file = STATE / 'config.json'
     config = json.loads(config_file.read_text('utf8')) if config_file.is_file() else {}
     hosts = [BOOTSTRAP_HOST, *config.get('hostnames', []), *args.hostname]
     if args.version_file.is_file():
         hosts.append(urlsplit(read_version(args.version_file)['apiRoot']).hostname)
     hosts = sorted(set(hosts))
-    result = create_local_pki(STATE, args.lan_ip, hosts)
-    if result['status'] == 'incomplete':
-        raise ValueError('Existing PKI is incomplete: ' + ', '.join(result['missing']))
-    config.update(lanIp=args.lan_ip, hostnames=hosts)
+    config.update(lanIp=lan_ip, hostnames=hosts)
     config.setdefault('serverDisplayName', 'DeathNote')
+    config.setdefault('certFile', DEFAULT_GAME_CERTIFICATE)
+    config.setdefault('keyFile', DEFAULT_GAME_KEY)
     config_file.write_text(json.dumps(config, indent=2) + '\n', encoding='utf8')
-    publish_setup(STATE, STATE / 'setup')
+    result = {'configFile': str(config_file), 'lanIp': lan_ip, 'hostnames': hosts,
+              'certFile': config['certFile'], 'keyFile': config['keyFile'], 'chainFile': config.get('chainFile')}
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
 def update(args):
-    from deathnote.data.locking import workspace_lock
-    from deathnote.data.public_update import check_public_data, update_public_data
+    from deathnote.data.public_update import check_public_data
 
-    def progress(value):
-        if value['totalFiles']:
-            print(f"{value['message']} ({value['completedFiles']}/{value['totalFiles']})", file=sys.stderr)
-        else:
-            print(value['message'], file=sys.stderr)
-
-    if args.check:
-        result = check_public_data(ROOT, apk_file=args.apk, on_progress=progress)
-    else:
-        with workspace_lock(ROOT, 'service.lock'):
-            result = update_public_data(ROOT, apk_file=args.apk, on_progress=progress,
-                                        backup_before_update=args.backup, include_ios_catalogs=args.catalogs)
+    if not args.check:
+        raise ValueError('Use import-public SOURCE to install a snapshot or update --check to compare versions.')
+    result = check_public_data(ROOT, on_progress=lambda entry: print(entry['message'], file=sys.stderr))
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
@@ -219,17 +210,15 @@ def main(argv=None):
     commands = parser.add_subparsers(dest='command', required=True)
     state = commands.add_parser('status', help='Read local readiness; create no files')
     state.add_argument('--version-file', type=Path, default=VERSION)
-    initialize = commands.add_parser('init', help='Explicitly create/reuse a private local CA and download page')
+    initialize = commands.add_parser('init', help='Configure the LAN address and paths for supplied game TLS files')
     initialize.add_argument('--lan-ip', required=True)
     initialize.add_argument('--hostname', action='append', default=[])
     initialize.add_argument('--version-file', type=Path, default=VERSION)
-    sync = commands.add_parser('update', help='Fetch the public version and master data')
-    sync.add_argument('--apk', type=Path, default=ROOT / 'client.apk')
+    sync = commands.add_parser('update', help='Compare the imported snapshot with official versions')
     sync.add_argument('--check', action='store_true', help='Check the version without writing files')
-    sync.add_argument('--backup', action='store_true', help='Back up existing local data before publishing')
-    sync.add_argument('--catalogs', action='store_true', help='Also download the five iOS catalog pairs')
     importer = commands.add_parser('import-public', help='Import an existing public-data snapshot')
-    importer.add_argument('source', type=Path, help='Root of the previous server installation')
+    importer.add_argument('source', type=Path, help='Root of the installation containing the public snapshot')
+    importer.add_argument('--backup', action='store_true', help='Back up existing data before importing')
     candidate = commands.add_parser('candidates', help='List or switch local chart candidates')
     candidate_commands = candidate.add_subparsers(dest='candidate_action', required=True)
     candidate_commands.add_parser('list')
@@ -246,9 +235,9 @@ def main(argv=None):
     serve = commands.add_parser('run', help='Run the game server in the foreground')
     serve.add_argument('--host', default='127.0.0.1')
     serve.add_argument('--port', type=int, default=443)
-    serve.add_argument('--cert-file', type=Path, help='Service certificate; overrides config.json certFile')
-    serve.add_argument('--key-file', type=Path, help='Private key; overrides config.json keyFile')
-    serve.add_argument('--chain-file', type=Path, help='Public CA chain appended to the service certificate')
+    serve.add_argument('--cert-file', type=Path, help='Game TLS certificate PEM (overrides config.json certFile)')
+    serve.add_argument('--key-file', type=Path, help='Game TLS private key PEM (overrides config.json keyFile)')
+    serve.add_argument('--chain-file', type=Path, help='Certificate chain PEM appended to the game TLS certificate')
     serve.add_argument('--version-file', type=Path, default=VERSION)
     serve.add_argument('--lan-ip')
     serve.add_argument('--api-root')
@@ -274,7 +263,8 @@ def main(argv=None):
         elif args.command == 'import-public':
             from deathnote.data.snapshot import import_public_data
             with workspace_lock(ROOT, 'service.lock'):
-                print(json.dumps(import_public_data(ROOT, args.source), ensure_ascii=False, indent=2))
+                result = import_public_data(ROOT, args.source, backup_before_import=args.backup)
+                print(json.dumps(result, ensure_ascii=False, indent=2))
         elif args.command == 'candidates':
             candidates(args)
         elif args.command == 'image-certificate':

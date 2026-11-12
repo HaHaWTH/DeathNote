@@ -1,8 +1,11 @@
+from contextlib import closing
 from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
 import re
+import shutil
+import sqlite3
 import struct
 
 from .catalog import Catalog
@@ -178,7 +181,40 @@ def _publish_metadata(stage, public):
         raise
 
 
-def import_public_data(destination_root, source_root):
+def _backup_public_data(root, previous):
+    public = root / '.native-server/public'
+    recorded_at = datetime.now(timezone.utc)
+    destination = root / '.native-server/backups' / (recorded_at.strftime('%Y%m%dT%H%M%S%fZ')
+                                                    + '-before-master-import')
+    backup_public = destination / 'public'
+    try:
+        backup_public.mkdir(parents=True, exist_ok=False)
+        for name in _METADATA:
+            source = public / name
+            if source.is_file():
+                shutil.copyfile(source, backup_public / name)
+        master_directory = public / 'masterdata' / previous['masterVersion']
+        if master_directory.is_dir():
+            shutil.copytree(master_directory, backup_public / 'masterdata' / previous['masterVersion'])
+        database = root / '.native-server/players.sqlite3'
+        account_backed_up = database.is_file()
+        if account_backed_up:
+            target = destination / 'PRIVATE/players.sqlite3'
+            target.parent.mkdir()
+            with closing(sqlite3.connect(database.resolve().as_uri() + '?mode=ro', uri=True)) as source:
+                with closing(sqlite3.connect(target)) as backup:
+                    source.backup(backup, pages=256)
+                    if backup.execute('PRAGMA integrity_check').fetchone()[0] != 'ok':
+                        raise RuntimeError('The pre-import account backup failed its integrity check.')
+        report = {'recordedAt': recorded_at.isoformat(), 'version': previous,
+                  'accountBackedUp': account_backed_up}
+        (destination / 'report.json').write_bytes(_json_bytes(report))
+    except (OSError, sqlite3.Error) as error:
+        raise RuntimeError('The pre-import backup failed.') from error
+    return destination.relative_to(root).as_posix()
+
+
+def import_public_data(destination_root, source_root, *, backup_before_import=False):
     destination_root, source_root = Path(destination_root).resolve(), Path(source_root).resolve()
     if destination_root == source_root:
         raise ValueError('Choose a different project directory as the import source.')
@@ -190,6 +226,7 @@ def import_public_data(destination_root, source_root):
     source_version = _contained(source, 'version.json')
     raw_version = source_version.read_bytes()
     version = _version(raw_version)
+    backup_directory = None
     with workspace_lock(destination_root):
         _reject_active(destination_root, 'destination')
         public.mkdir(parents=True, exist_ok=True)
@@ -201,6 +238,11 @@ def import_public_data(destination_root, source_root):
             _reject_active(source_root, 'source')
             _reject_active(destination_root, 'destination')
             (stage / 'version.json').write_bytes(_json_bytes(version))
+            current_version = _contained(public, 'version.json')
+            if backup_before_import and current_version.is_file():
+                previous = _version(current_version.read_bytes())
+                backup_directory = _backup_public_data(destination_root, previous)
             _install_versioned_files(stage, public)
             _publish_metadata(stage, public)
-    return {'version': version, 'verifiedFiles': master_count, 'catalogPairs': catalog_pairs}
+    return {'version': version, 'verifiedFiles': master_count, 'catalogPairs': catalog_pairs,
+            'backupDirectory': backup_directory}

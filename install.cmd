@@ -9,7 +9,5 @@ if not exist ".venv\Scripts\python.exe" (
     )
     if errorlevel 1 exit /b 1
 )
-".venv\Scripts\python.exe" -m pip --disable-pip-version-check --no-cache-dir install setuptools wheel
-if errorlevel 1 exit /b 1
-".venv\Scripts\python.exe" -m pip --disable-pip-version-check --no-cache-dir install --no-build-isolation -r requirements.txt
+".venv\Scripts\python.exe" -m pip --disable-pip-version-check --no-cache-dir install -r requirements.txt
 exit /b %errorlevel%

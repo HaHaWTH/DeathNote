@@ -1,4 +1,4 @@
-"""Local PKI creation is confined to the explicit create_local_pki call."""
+"""Load game TLS files and issue certificates for the separate image service."""
 from __future__ import annotations
 
 import ipaddress
@@ -10,6 +10,9 @@ from collections.abc import Iterable
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+
+DEFAULT_GAME_CERTIFICATE = ".native-server/server.crt"
+DEFAULT_GAME_KEY = ".native-server/server.key"
 
 _FILES = {
     "ca_key": "rootCA.key",
@@ -39,7 +42,7 @@ def _write_new(path: Path, data: bytes, *, private: bool = False) -> None:
 
 def create_local_pki(state_dir: str | Path, lan_ip: str, hostnames: Iterable[str], *,
                      display_name: str = "DeathNote Local Server CA") -> dict:
-    """Explicit init operation; imports and module loading create no files.
+    """Create or reuse a local CA and server certificate.
 
     Return flat path keys plus ``status`` (created/reused/incomplete),
     ``state_dir`` and ``missing``. An incomplete existing set is returned as-is.
@@ -138,17 +141,26 @@ def create_local_pki(state_dir: str | Path, lan_ip: str, hostnames: Iterable[str
 
 def load_server_context(cert_file: str | Path, key_file: str | Path,
                         chain_file: str | Path | None = None) -> ssl.SSLContext:
-    """Load explicit certificate files without binding sockets or changing trust."""
+    """Load the operator-supplied game TLS files."""
+    certificate = Path(cert_file)
+    key = Path(key_file)
+    chain = Path(chain_file) if chain_file is not None else None
+    missing = [f"{label} ({path})" for label, path in (
+        ("certificate", certificate), ("private key", key), ("certificate chain", chain)
+    ) if path is not None and not path.is_file()]
+    if missing:
+        raise FileNotFoundError("Game TLS files are missing (" + ", ".join(missing) + ").")
+
     context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
     context.minimum_version = ssl.TLSVersion.TLSv1_2
     context.set_alpn_protocols(["h2"])
-    if chain_file is None:
-        context.load_cert_chain(certfile=str(cert_file), keyfile=str(key_file))
+    if chain is None:
+        context.load_cert_chain(certfile=str(certificate), keyfile=str(key))
     else:
         from tempfile import TemporaryDirectory
 
         with TemporaryDirectory(prefix="deathnote-public-chain-") as directory:
             fullchain = Path(directory) / "server-chain.pem"
-            fullchain.write_bytes(Path(cert_file).read_bytes() + b"\n" + Path(chain_file).read_bytes())
-            context.load_cert_chain(certfile=str(fullchain), keyfile=str(key_file))
+            fullchain.write_bytes(certificate.read_bytes() + b"\n" + chain.read_bytes())
+            context.load_cert_chain(certfile=str(fullchain), keyfile=str(key))
     return context

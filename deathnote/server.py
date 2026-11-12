@@ -20,7 +20,7 @@ async def run(args):
     from deathnote.net.chat_realtime import NativeChatRealtime
     from deathnote.net.http2 import serve_native
     from deathnote.net.image_service import serve_announcement_images
-    from deathnote.net.tls import load_server_context
+    from deathnote.net.tls import DEFAULT_GAME_CERTIFICATE, DEFAULT_GAME_KEY, load_server_context
 
     if args.launch_pid_file is not None:
         temporary = args.launch_pid_file.with_suffix('.tmp')
@@ -33,10 +33,12 @@ async def run(args):
         raise ValueError('DNS needs --lan-ip or an explicitly initialized config.json')
     if args.h2c_only and args.h2c_port is None:
         raise ValueError('--h2c-only requires --h2c-port')
-    cert_file = args.cert_file or ROOT / config.get('certFile', '.native-server/server.crt')
-    key_file = args.key_file or ROOT / config.get('keyFile', '.native-server/server.key')
-    chain_file = args.chain_file or (ROOT / config['chainFile'] if config.get('chainFile') else None)
-    context = None if args.h2c_only else load_server_context(cert_file, key_file, chain_file)
+    context = None
+    if not args.h2c_only:
+        cert_file = args.cert_file or ROOT / config.get('certFile', DEFAULT_GAME_CERTIFICATE)
+        key_file = args.key_file or ROOT / config.get('keyFile', DEFAULT_GAME_KEY)
+        chain_file = args.chain_file or (ROOT / config['chainFile'] if config.get('chainFile') else None)
+        context = load_server_context(cert_file, key_file, chain_file)
     api_root = args.api_root
     if api_root is None and args.h2c_port is not None:
         if not lan_ip:
